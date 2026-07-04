@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package patientdata.v1;
+
+// Tipos de dados do patient-data-service (CÓPIA das mensagens; fonte de verdade
+// no repo do patient-data). Aqui NÃO há o service: no Modelo B (fiel à Figura 1),
+// o data-transform NÃO é cliente do patient-data — ele recebe estes tipos no
+// request, repassados pela API Gateway. Mantenha em sincronia com o original.
+option go_package = "github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/patientdata/v1;patientdatav1";
+
+message Patient {
+  string patient_id = 1;
+  string full_name = 2;
+  string birth_date = 3;
+  string gender = 4;
+  string city = 5;
+  string state = 6;
+  string cpf = 7;
+  string cns = 8;
+}
+
+message Encounter {
+  string encounter_id = 1;
+  string patient_id = 2;
+  string start_date = 3;
+  string end_date = 4;
+  string encounter_type = 5;
+  string department = 6;
+}
+
+message ClinicalEvent {
+  string event_id = 1;
+  string patient_id = 2;
+  string encounter_id = 3;
+  string event_type = 4;
+  string code = 5;
+  string description = 6;
+  string event_date = 7;
+  optional double value = 8;
+  string unit = 9;
+}
+
+message Project {
+  string project_id = 1;
+  string title = 2;
+  string researcher_username = 3;
+  string condition_code = 4;
+  string status = 5;
+  string valid_until = 6;
+}
+
+message ClinicalSummary {
+  Patient patient = 1;
+  Encounter last_encounter = 2;
+  repeated ClinicalEvent conditions = 3;
+  repeated ClinicalEvent recent_observations = 4;
+  repeated ClinicalEvent active_medications = 5;
+}
+
+message Count {
+  string key = 1;
+  int64 count = 2;
+}
+
+message CohortStatistics {
+  string condition_code = 1;
+  int64 total_patients = 2;
+  repeated Count by_sex = 3;
+  repeated Count by_age_range = 4;
+  double mean_hba1c = 5;
+  double median_hba1c = 6;
+  repeated Count medication_frequency = 7;
+}

@@ -1,0 +1,18 @@
+# O data-transform-service é standalone (Modelo B): não acessa banco nem chama o
+# patient-data — recebe os dados crus no request (repassados pela API Gateway).
+# Este compose apenas builda e sobe o serviço.
+#
+# Uso:
+#   docker compose up -d --build
+#   grpcurl -plaintext localhost:50053 list
+services:
+  data-transform-service:
+    build: .
+    environment:
+      GRPC_PORT: "50053"
+      METRICS_PORT: "9091"
+      PSEUDONYM_SALT: "pspd-troque-este-salt"
+      LOG_LEVEL: "info"
+    ports:
+      - "50053:50053"
+      - "9091:9091"
