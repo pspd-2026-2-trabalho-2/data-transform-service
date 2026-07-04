@@ -10,6 +10,7 @@ import (
 	v1 "github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/patientdata/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -78,51 +79,6 @@ func (AccessLevel) EnumDescriptor() ([]byte, []int) {
 	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{0}
 }
 
-// Resposta genérica contendo um recurso ou Bundle FHIR serializado em JSON.
-type FhirResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FhirJson      string                 `protobuf:"bytes,1,opt,name=fhir_json,json=fhirJson,proto3" json:"fhir_json,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *FhirResponse) Reset() {
-	*x = FhirResponse{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *FhirResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*FhirResponse) ProtoMessage() {}
-
-func (x *FhirResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use FhirResponse.ProtoReflect.Descriptor instead.
-func (*FhirResponse) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *FhirResponse) GetFhirJson() string {
-	if x != nil {
-		return x.FhirJson
-	}
-	return ""
-}
-
 type TransformPatientRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Patient       *v1.Patient            `protobuf:"bytes,1,opt,name=patient,proto3" json:"patient,omitempty"`
@@ -133,7 +89,7 @@ type TransformPatientRequest struct {
 
 func (x *TransformPatientRequest) Reset() {
 	*x = TransformPatientRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[1]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -145,7 +101,7 @@ func (x *TransformPatientRequest) String() string {
 func (*TransformPatientRequest) ProtoMessage() {}
 
 func (x *TransformPatientRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[1]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -158,7 +114,7 @@ func (x *TransformPatientRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformPatientRequest.ProtoReflect.Descriptor instead.
 func (*TransformPatientRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{1}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *TransformPatientRequest) GetPatient() *v1.Patient {
@@ -185,7 +141,7 @@ type TransformClinicalSummaryRequest struct {
 
 func (x *TransformClinicalSummaryRequest) Reset() {
 	*x = TransformClinicalSummaryRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[2]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -197,7 +153,7 @@ func (x *TransformClinicalSummaryRequest) String() string {
 func (*TransformClinicalSummaryRequest) ProtoMessage() {}
 
 func (x *TransformClinicalSummaryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[2]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -210,7 +166,7 @@ func (x *TransformClinicalSummaryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformClinicalSummaryRequest.ProtoReflect.Descriptor instead.
 func (*TransformClinicalSummaryRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{2}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *TransformClinicalSummaryRequest) GetSummary() *v1.ClinicalSummary {
@@ -238,7 +194,7 @@ type TransformClinicalHistoryRequest struct {
 
 func (x *TransformClinicalHistoryRequest) Reset() {
 	*x = TransformClinicalHistoryRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[3]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -250,7 +206,7 @@ func (x *TransformClinicalHistoryRequest) String() string {
 func (*TransformClinicalHistoryRequest) ProtoMessage() {}
 
 func (x *TransformClinicalHistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[3]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -263,7 +219,7 @@ func (x *TransformClinicalHistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformClinicalHistoryRequest.ProtoReflect.Descriptor instead.
 func (*TransformClinicalHistoryRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{3}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *TransformClinicalHistoryRequest) GetPatient() *v1.Patient {
@@ -297,7 +253,7 @@ type TransformPatientListRequest struct {
 
 func (x *TransformPatientListRequest) Reset() {
 	*x = TransformPatientListRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[4]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -309,7 +265,7 @@ func (x *TransformPatientListRequest) String() string {
 func (*TransformPatientListRequest) ProtoMessage() {}
 
 func (x *TransformPatientListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[4]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +278,7 @@ func (x *TransformPatientListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformPatientListRequest.ProtoReflect.Descriptor instead.
 func (*TransformPatientListRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{4}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *TransformPatientListRequest) GetPatients() []*v1.Patient {
@@ -350,7 +306,7 @@ type PatientExams struct {
 
 func (x *PatientExams) Reset() {
 	*x = PatientExams{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[5]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -362,7 +318,7 @@ func (x *PatientExams) String() string {
 func (*PatientExams) ProtoMessage() {}
 
 func (x *PatientExams) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[5]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -375,7 +331,7 @@ func (x *PatientExams) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PatientExams.ProtoReflect.Descriptor instead.
 func (*PatientExams) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{5}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PatientExams) GetPatient() *v1.Patient {
@@ -402,7 +358,7 @@ type TransformCohortExamsRequest struct {
 
 func (x *TransformCohortExamsRequest) Reset() {
 	*x = TransformCohortExamsRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[6]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -414,7 +370,7 @@ func (x *TransformCohortExamsRequest) String() string {
 func (*TransformCohortExamsRequest) ProtoMessage() {}
 
 func (x *TransformCohortExamsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[6]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -427,7 +383,7 @@ func (x *TransformCohortExamsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformCohortExamsRequest.ProtoReflect.Descriptor instead.
 func (*TransformCohortExamsRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{6}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *TransformCohortExamsRequest) GetPatients() []*PatientExams {
@@ -453,7 +409,7 @@ type TransformCohortStatisticsRequest struct {
 
 func (x *TransformCohortStatisticsRequest) Reset() {
 	*x = TransformCohortStatisticsRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[7]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -465,7 +421,7 @@ func (x *TransformCohortStatisticsRequest) String() string {
 func (*TransformCohortStatisticsRequest) ProtoMessage() {}
 
 func (x *TransformCohortStatisticsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[7]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -478,7 +434,7 @@ func (x *TransformCohortStatisticsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformCohortStatisticsRequest.ProtoReflect.Descriptor instead.
 func (*TransformCohortStatisticsRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{7}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *TransformCohortStatisticsRequest) GetStats() *v1.CohortStatistics {
@@ -497,7 +453,7 @@ type TransformProjectsRequest struct {
 
 func (x *TransformProjectsRequest) Reset() {
 	*x = TransformProjectsRequest{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[8]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -509,7 +465,7 @@ func (x *TransformProjectsRequest) String() string {
 func (*TransformProjectsRequest) ProtoMessage() {}
 
 func (x *TransformProjectsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[8]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -522,7 +478,7 @@ func (x *TransformProjectsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransformProjectsRequest.ProtoReflect.Descriptor instead.
 func (*TransformProjectsRequest) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{8}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *TransformProjectsRequest) GetProjects() []*v1.Project {
@@ -544,7 +500,7 @@ type Percentage struct {
 
 func (x *Percentage) Reset() {
 	*x = Percentage{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[9]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -556,7 +512,7 @@ func (x *Percentage) String() string {
 func (*Percentage) ProtoMessage() {}
 
 func (x *Percentage) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[9]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -569,7 +525,7 @@ func (x *Percentage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Percentage.ProtoReflect.Descriptor instead.
 func (*Percentage) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{9}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Percentage) GetKey() string {
@@ -602,13 +558,14 @@ type CohortStatisticsResponse struct {
 	MeanHba1C           float64                `protobuf:"fixed64,5,opt,name=mean_hba1c,json=meanHba1c,proto3" json:"mean_hba1c,omitempty"`
 	MedianHba1C         float64                `protobuf:"fixed64,6,opt,name=median_hba1c,json=medianHba1c,proto3" json:"median_hba1c,omitempty"`
 	MedicationFrequency []*Percentage          `protobuf:"bytes,7,rep,name=medication_frequency,json=medicationFrequency,proto3" json:"medication_frequency,omitempty"`
+	ByDepartment        []*Percentage          `protobuf:"bytes,8,rep,name=by_department,json=byDepartment,proto3" json:"by_department,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
 
 func (x *CohortStatisticsResponse) Reset() {
 	*x = CohortStatisticsResponse{}
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[10]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -620,7 +577,7 @@ func (x *CohortStatisticsResponse) String() string {
 func (*CohortStatisticsResponse) ProtoMessage() {}
 
 func (x *CohortStatisticsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_datatransform_v1_datatransform_proto_msgTypes[10]
+	mi := &file_datatransform_v1_datatransform_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -633,7 +590,7 @@ func (x *CohortStatisticsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CohortStatisticsResponse.ProtoReflect.Descriptor instead.
 func (*CohortStatisticsResponse) Descriptor() ([]byte, []int) {
-	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{10}
+	return file_datatransform_v1_datatransform_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CohortStatisticsResponse) GetConditionCode() string {
@@ -685,13 +642,18 @@ func (x *CohortStatisticsResponse) GetMedicationFrequency() []*Percentage {
 	return nil
 }
 
+func (x *CohortStatisticsResponse) GetByDepartment() []*Percentage {
+	if x != nil {
+		return x.ByDepartment
+	}
+	return nil
+}
+
 var File_datatransform_v1_datatransform_proto protoreflect.FileDescriptor
 
 const file_datatransform_v1_datatransform_proto_rawDesc = "" +
 	"\n" +
-	"$datatransform/v1/datatransform.proto\x12\x10datatransform.v1\x1a patientdata/v1/patientdata.proto\"+\n" +
-	"\fFhirResponse\x12\x1b\n" +
-	"\tfhir_json\x18\x01 \x01(\tR\bfhirJson\"\x8e\x01\n" +
+	"$datatransform/v1/datatransform.proto\x12\x10datatransform.v1\x1a patientdata/v1/patientdata.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x8e\x01\n" +
 	"\x17TransformPatientRequest\x121\n" +
 	"\apatient\x18\x01 \x01(\v2\x17.patientdata.v1.PatientR\apatient\x12@\n" +
 	"\faccess_level\x18\x02 \x01(\x0e2\x1d.datatransform.v1.AccessLevelR\vaccessLevel\"\x9e\x01\n" +
@@ -721,7 +683,7 @@ const file_datatransform_v1_datatransform_proto_rawDesc = "" +
 	"\x05count\x18\x02 \x01(\x03R\x05count\x12\x1e\n" +
 	"\n" +
 	"percentage\x18\x03 \x01(\x01R\n" +
-	"percentage\"\xf0\x02\n" +
+	"percentage\"\xb3\x03\n" +
 	"\x18CohortStatisticsResponse\x12%\n" +
 	"\x0econdition_code\x18\x01 \x01(\tR\rconditionCode\x12%\n" +
 	"\x0etotal_patients\x18\x02 \x01(\x03R\rtotalPatients\x123\n" +
@@ -731,7 +693,8 @@ const file_datatransform_v1_datatransform_proto_rawDesc = "" +
 	"\n" +
 	"mean_hba1c\x18\x05 \x01(\x01R\tmeanHba1c\x12!\n" +
 	"\fmedian_hba1c\x18\x06 \x01(\x01R\vmedianHba1c\x12O\n" +
-	"\x14medication_frequency\x18\a \x03(\v2\x1c.datatransform.v1.PercentageR\x13medicationFrequency*b\n" +
+	"\x14medication_frequency\x18\a \x03(\v2\x1c.datatransform.v1.PercentageR\x13medicationFrequency\x12A\n" +
+	"\rby_department\x18\b \x03(\v2\x1c.datatransform.v1.PercentageR\fbyDepartment*b\n" +
 	"\vAccessLevel\x12\x1c\n" +
 	"\x18ACCESS_LEVEL_UNSPECIFIED\x10\x00\x12\b\n" +
 	"\x04FULL\x10\x01\x12\v\n" +
@@ -739,15 +702,15 @@ const file_datatransform_v1_datatransform_proto_rawDesc = "" +
 	"\n" +
 	"ANONYMIZED\x10\x03\x12\x0e\n" +
 	"\n" +
-	"AGGREGATED\x10\x042\xff\x05\n" +
-	"\x14DataTransformService\x12]\n" +
-	"\x10TransformPatient\x12).datatransform.v1.TransformPatientRequest\x1a\x1e.datatransform.v1.FhirResponse\x12m\n" +
-	"\x18TransformClinicalSummary\x121.datatransform.v1.TransformClinicalSummaryRequest\x1a\x1e.datatransform.v1.FhirResponse\x12m\n" +
-	"\x18TransformClinicalHistory\x121.datatransform.v1.TransformClinicalHistoryRequest\x1a\x1e.datatransform.v1.FhirResponse\x12e\n" +
-	"\x14TransformPatientList\x12-.datatransform.v1.TransformPatientListRequest\x1a\x1e.datatransform.v1.FhirResponse\x12e\n" +
-	"\x14TransformCohortExams\x12-.datatransform.v1.TransformCohortExamsRequest\x1a\x1e.datatransform.v1.FhirResponse\x12{\n" +
-	"\x19TransformCohortStatistics\x122.datatransform.v1.TransformCohortStatisticsRequest\x1a*.datatransform.v1.CohortStatisticsResponse\x12_\n" +
-	"\x11TransformProjects\x12*.datatransform.v1.TransformProjectsRequest\x1a\x1e.datatransform.v1.FhirResponseB_Z]github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/datatransform/v1;datatransformv1b\x06proto3"
+	"AGGREGATED\x10\x042\xd5\x05\n" +
+	"\x14DataTransformService\x12V\n" +
+	"\x10TransformPatient\x12).datatransform.v1.TransformPatientRequest\x1a\x17.google.protobuf.Struct\x12f\n" +
+	"\x18TransformClinicalSummary\x121.datatransform.v1.TransformClinicalSummaryRequest\x1a\x17.google.protobuf.Struct\x12f\n" +
+	"\x18TransformClinicalHistory\x121.datatransform.v1.TransformClinicalHistoryRequest\x1a\x17.google.protobuf.Struct\x12^\n" +
+	"\x14TransformPatientList\x12-.datatransform.v1.TransformPatientListRequest\x1a\x17.google.protobuf.Struct\x12^\n" +
+	"\x14TransformCohortExams\x12-.datatransform.v1.TransformCohortExamsRequest\x1a\x17.google.protobuf.Struct\x12{\n" +
+	"\x19TransformCohortStatistics\x122.datatransform.v1.TransformCohortStatisticsRequest\x1a*.datatransform.v1.CohortStatisticsResponse\x12X\n" +
+	"\x11TransformProjects\x12*.datatransform.v1.TransformProjectsRequest\x1a\x17.google.protobuf.StructB_Z]github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/datatransform/v1;datatransformv1b\x06proto3"
 
 var (
 	file_datatransform_v1_datatransform_proto_rawDescOnce sync.Once
@@ -762,64 +725,65 @@ func file_datatransform_v1_datatransform_proto_rawDescGZIP() []byte {
 }
 
 var file_datatransform_v1_datatransform_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_datatransform_v1_datatransform_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_datatransform_v1_datatransform_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_datatransform_v1_datatransform_proto_goTypes = []any{
 	(AccessLevel)(0),                         // 0: datatransform.v1.AccessLevel
-	(*FhirResponse)(nil),                     // 1: datatransform.v1.FhirResponse
-	(*TransformPatientRequest)(nil),          // 2: datatransform.v1.TransformPatientRequest
-	(*TransformClinicalSummaryRequest)(nil),  // 3: datatransform.v1.TransformClinicalSummaryRequest
-	(*TransformClinicalHistoryRequest)(nil),  // 4: datatransform.v1.TransformClinicalHistoryRequest
-	(*TransformPatientListRequest)(nil),      // 5: datatransform.v1.TransformPatientListRequest
-	(*PatientExams)(nil),                     // 6: datatransform.v1.PatientExams
-	(*TransformCohortExamsRequest)(nil),      // 7: datatransform.v1.TransformCohortExamsRequest
-	(*TransformCohortStatisticsRequest)(nil), // 8: datatransform.v1.TransformCohortStatisticsRequest
-	(*TransformProjectsRequest)(nil),         // 9: datatransform.v1.TransformProjectsRequest
-	(*Percentage)(nil),                       // 10: datatransform.v1.Percentage
-	(*CohortStatisticsResponse)(nil),         // 11: datatransform.v1.CohortStatisticsResponse
-	(*v1.Patient)(nil),                       // 12: patientdata.v1.Patient
-	(*v1.ClinicalSummary)(nil),               // 13: patientdata.v1.ClinicalSummary
-	(*v1.ClinicalEvent)(nil),                 // 14: patientdata.v1.ClinicalEvent
-	(*v1.CohortStatistics)(nil),              // 15: patientdata.v1.CohortStatistics
-	(*v1.Project)(nil),                       // 16: patientdata.v1.Project
+	(*TransformPatientRequest)(nil),          // 1: datatransform.v1.TransformPatientRequest
+	(*TransformClinicalSummaryRequest)(nil),  // 2: datatransform.v1.TransformClinicalSummaryRequest
+	(*TransformClinicalHistoryRequest)(nil),  // 3: datatransform.v1.TransformClinicalHistoryRequest
+	(*TransformPatientListRequest)(nil),      // 4: datatransform.v1.TransformPatientListRequest
+	(*PatientExams)(nil),                     // 5: datatransform.v1.PatientExams
+	(*TransformCohortExamsRequest)(nil),      // 6: datatransform.v1.TransformCohortExamsRequest
+	(*TransformCohortStatisticsRequest)(nil), // 7: datatransform.v1.TransformCohortStatisticsRequest
+	(*TransformProjectsRequest)(nil),         // 8: datatransform.v1.TransformProjectsRequest
+	(*Percentage)(nil),                       // 9: datatransform.v1.Percentage
+	(*CohortStatisticsResponse)(nil),         // 10: datatransform.v1.CohortStatisticsResponse
+	(*v1.Patient)(nil),                       // 11: patientdata.v1.Patient
+	(*v1.ClinicalSummary)(nil),               // 12: patientdata.v1.ClinicalSummary
+	(*v1.ClinicalEvent)(nil),                 // 13: patientdata.v1.ClinicalEvent
+	(*v1.CohortStatistics)(nil),              // 14: patientdata.v1.CohortStatistics
+	(*v1.Project)(nil),                       // 15: patientdata.v1.Project
+	(*structpb.Struct)(nil),                  // 16: google.protobuf.Struct
 }
 var file_datatransform_v1_datatransform_proto_depIdxs = []int32{
-	12, // 0: datatransform.v1.TransformPatientRequest.patient:type_name -> patientdata.v1.Patient
+	11, // 0: datatransform.v1.TransformPatientRequest.patient:type_name -> patientdata.v1.Patient
 	0,  // 1: datatransform.v1.TransformPatientRequest.access_level:type_name -> datatransform.v1.AccessLevel
-	13, // 2: datatransform.v1.TransformClinicalSummaryRequest.summary:type_name -> patientdata.v1.ClinicalSummary
+	12, // 2: datatransform.v1.TransformClinicalSummaryRequest.summary:type_name -> patientdata.v1.ClinicalSummary
 	0,  // 3: datatransform.v1.TransformClinicalSummaryRequest.access_level:type_name -> datatransform.v1.AccessLevel
-	12, // 4: datatransform.v1.TransformClinicalHistoryRequest.patient:type_name -> patientdata.v1.Patient
-	14, // 5: datatransform.v1.TransformClinicalHistoryRequest.events:type_name -> patientdata.v1.ClinicalEvent
+	11, // 4: datatransform.v1.TransformClinicalHistoryRequest.patient:type_name -> patientdata.v1.Patient
+	13, // 5: datatransform.v1.TransformClinicalHistoryRequest.events:type_name -> patientdata.v1.ClinicalEvent
 	0,  // 6: datatransform.v1.TransformClinicalHistoryRequest.access_level:type_name -> datatransform.v1.AccessLevel
-	12, // 7: datatransform.v1.TransformPatientListRequest.patients:type_name -> patientdata.v1.Patient
+	11, // 7: datatransform.v1.TransformPatientListRequest.patients:type_name -> patientdata.v1.Patient
 	0,  // 8: datatransform.v1.TransformPatientListRequest.access_level:type_name -> datatransform.v1.AccessLevel
-	12, // 9: datatransform.v1.PatientExams.patient:type_name -> patientdata.v1.Patient
-	14, // 10: datatransform.v1.PatientExams.exams:type_name -> patientdata.v1.ClinicalEvent
-	6,  // 11: datatransform.v1.TransformCohortExamsRequest.patients:type_name -> datatransform.v1.PatientExams
+	11, // 9: datatransform.v1.PatientExams.patient:type_name -> patientdata.v1.Patient
+	13, // 10: datatransform.v1.PatientExams.exams:type_name -> patientdata.v1.ClinicalEvent
+	5,  // 11: datatransform.v1.TransformCohortExamsRequest.patients:type_name -> datatransform.v1.PatientExams
 	0,  // 12: datatransform.v1.TransformCohortExamsRequest.access_level:type_name -> datatransform.v1.AccessLevel
-	15, // 13: datatransform.v1.TransformCohortStatisticsRequest.stats:type_name -> patientdata.v1.CohortStatistics
-	16, // 14: datatransform.v1.TransformProjectsRequest.projects:type_name -> patientdata.v1.Project
-	10, // 15: datatransform.v1.CohortStatisticsResponse.by_sex:type_name -> datatransform.v1.Percentage
-	10, // 16: datatransform.v1.CohortStatisticsResponse.by_age_range:type_name -> datatransform.v1.Percentage
-	10, // 17: datatransform.v1.CohortStatisticsResponse.medication_frequency:type_name -> datatransform.v1.Percentage
-	2,  // 18: datatransform.v1.DataTransformService.TransformPatient:input_type -> datatransform.v1.TransformPatientRequest
-	3,  // 19: datatransform.v1.DataTransformService.TransformClinicalSummary:input_type -> datatransform.v1.TransformClinicalSummaryRequest
-	4,  // 20: datatransform.v1.DataTransformService.TransformClinicalHistory:input_type -> datatransform.v1.TransformClinicalHistoryRequest
-	5,  // 21: datatransform.v1.DataTransformService.TransformPatientList:input_type -> datatransform.v1.TransformPatientListRequest
-	7,  // 22: datatransform.v1.DataTransformService.TransformCohortExams:input_type -> datatransform.v1.TransformCohortExamsRequest
-	8,  // 23: datatransform.v1.DataTransformService.TransformCohortStatistics:input_type -> datatransform.v1.TransformCohortStatisticsRequest
-	9,  // 24: datatransform.v1.DataTransformService.TransformProjects:input_type -> datatransform.v1.TransformProjectsRequest
-	1,  // 25: datatransform.v1.DataTransformService.TransformPatient:output_type -> datatransform.v1.FhirResponse
-	1,  // 26: datatransform.v1.DataTransformService.TransformClinicalSummary:output_type -> datatransform.v1.FhirResponse
-	1,  // 27: datatransform.v1.DataTransformService.TransformClinicalHistory:output_type -> datatransform.v1.FhirResponse
-	1,  // 28: datatransform.v1.DataTransformService.TransformPatientList:output_type -> datatransform.v1.FhirResponse
-	1,  // 29: datatransform.v1.DataTransformService.TransformCohortExams:output_type -> datatransform.v1.FhirResponse
-	11, // 30: datatransform.v1.DataTransformService.TransformCohortStatistics:output_type -> datatransform.v1.CohortStatisticsResponse
-	1,  // 31: datatransform.v1.DataTransformService.TransformProjects:output_type -> datatransform.v1.FhirResponse
-	25, // [25:32] is the sub-list for method output_type
-	18, // [18:25] is the sub-list for method input_type
-	18, // [18:18] is the sub-list for extension type_name
-	18, // [18:18] is the sub-list for extension extendee
-	0,  // [0:18] is the sub-list for field type_name
+	14, // 13: datatransform.v1.TransformCohortStatisticsRequest.stats:type_name -> patientdata.v1.CohortStatistics
+	15, // 14: datatransform.v1.TransformProjectsRequest.projects:type_name -> patientdata.v1.Project
+	9,  // 15: datatransform.v1.CohortStatisticsResponse.by_sex:type_name -> datatransform.v1.Percentage
+	9,  // 16: datatransform.v1.CohortStatisticsResponse.by_age_range:type_name -> datatransform.v1.Percentage
+	9,  // 17: datatransform.v1.CohortStatisticsResponse.medication_frequency:type_name -> datatransform.v1.Percentage
+	9,  // 18: datatransform.v1.CohortStatisticsResponse.by_department:type_name -> datatransform.v1.Percentage
+	1,  // 19: datatransform.v1.DataTransformService.TransformPatient:input_type -> datatransform.v1.TransformPatientRequest
+	2,  // 20: datatransform.v1.DataTransformService.TransformClinicalSummary:input_type -> datatransform.v1.TransformClinicalSummaryRequest
+	3,  // 21: datatransform.v1.DataTransformService.TransformClinicalHistory:input_type -> datatransform.v1.TransformClinicalHistoryRequest
+	4,  // 22: datatransform.v1.DataTransformService.TransformPatientList:input_type -> datatransform.v1.TransformPatientListRequest
+	6,  // 23: datatransform.v1.DataTransformService.TransformCohortExams:input_type -> datatransform.v1.TransformCohortExamsRequest
+	7,  // 24: datatransform.v1.DataTransformService.TransformCohortStatistics:input_type -> datatransform.v1.TransformCohortStatisticsRequest
+	8,  // 25: datatransform.v1.DataTransformService.TransformProjects:input_type -> datatransform.v1.TransformProjectsRequest
+	16, // 26: datatransform.v1.DataTransformService.TransformPatient:output_type -> google.protobuf.Struct
+	16, // 27: datatransform.v1.DataTransformService.TransformClinicalSummary:output_type -> google.protobuf.Struct
+	16, // 28: datatransform.v1.DataTransformService.TransformClinicalHistory:output_type -> google.protobuf.Struct
+	16, // 29: datatransform.v1.DataTransformService.TransformPatientList:output_type -> google.protobuf.Struct
+	16, // 30: datatransform.v1.DataTransformService.TransformCohortExams:output_type -> google.protobuf.Struct
+	10, // 31: datatransform.v1.DataTransformService.TransformCohortStatistics:output_type -> datatransform.v1.CohortStatisticsResponse
+	16, // 32: datatransform.v1.DataTransformService.TransformProjects:output_type -> google.protobuf.Struct
+	26, // [26:33] is the sub-list for method output_type
+	19, // [19:26] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_datatransform_v1_datatransform_proto_init() }
@@ -833,7 +797,7 @@ func file_datatransform_v1_datatransform_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_datatransform_v1_datatransform_proto_rawDesc), len(file_datatransform_v1_datatransform_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   11,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

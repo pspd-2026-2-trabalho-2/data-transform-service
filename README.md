@@ -42,7 +42,8 @@ API Gateway ──────────┤
 | clinical_events (Medication) | `MedicationRequest` |
 | projects | `ResearchStudy` |
 
-Vários recursos são agrupados num `Bundle`. A saída é FHIR em JSON (campo `fhir_json`).
+Vários recursos são agrupados num `Bundle`. A saída é o próprio objeto FHIR (recurso ou Bundle),
+como `google.protobuf.Struct` — ou seja, JSON, não uma string escapada.
 
 ## Requisitos
 - Go 1.25+, Docker + Compose

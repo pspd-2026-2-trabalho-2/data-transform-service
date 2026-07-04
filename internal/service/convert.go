@@ -29,10 +29,10 @@ func patientResource(v anonymize.PatientView) fhir.Patient {
 		p.Name = []fhir.HumanName{{Text: v.Name}}
 	}
 	if v.CPF != "" {
-		p.Identifier = append(p.Identifier, fhir.Identifier{System: "urn:oid:cpf", Value: v.CPF})
+		p.Identifier = append(p.Identifier, fhir.Identifier{System: "https://fhir.saude.gov.br/sid/cpf", Value: v.CPF})
 	}
 	if v.CNS != "" {
-		p.Identifier = append(p.Identifier, fhir.Identifier{System: "urn:oid:cns", Value: v.CNS})
+		p.Identifier = append(p.Identifier, fhir.Identifier{System: "https://fhir.saude.gov.br/sid/cns", Value: v.CNS})
 	}
 	if v.City != "" || v.State != "" {
 		p.Address = []fhir.Address{{City: v.City, State: v.State}}

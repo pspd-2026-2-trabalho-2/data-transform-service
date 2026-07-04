@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -32,25 +33,24 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// DataTransformService é um transformador PURO (Modelo B, fiel à Figura 1): a API
-// Gateway busca os dados crus no patient-data-service e os envia aqui junto com o
-// nível de acesso. Este serviço aplica anonimização/pseudonimização/agregação e
-// converte para HL7/FHIR. Não acessa banco nem chama o patient-data.
+// DataTransformService recebe os dados crus + nível de acesso, aplica
+// anonimização/agregação e converte para HL7/FHIR. As respostas FHIR são objetos
+// JSON (google.protobuf.Struct): um recurso (ex.: Patient) ou um Bundle.
 type DataTransformServiceClient interface {
 	// Paciente único -> recurso FHIR Patient (com o nível aplicado).
-	TransformPatient(ctx context.Context, in *TransformPatientRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformPatient(ctx context.Context, in *TransformPatientRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 	// Resumo clínico -> Bundle (Patient + Encounter + Condition + Observation + MedicationRequest).
-	TransformClinicalSummary(ctx context.Context, in *TransformClinicalSummaryRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformClinicalSummary(ctx context.Context, in *TransformClinicalSummaryRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 	// Histórico clínico -> Bundle de eventos em ordem temporal.
-	TransformClinicalHistory(ctx context.Context, in *TransformClinicalHistoryRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformClinicalHistory(ctx context.Context, in *TransformClinicalHistoryRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 	// Lista de pacientes (de um médico/estagiário) -> Bundle de Patient.
-	TransformPatientList(ctx context.Context, in *TransformPatientListRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformPatientList(ctx context.Context, in *TransformPatientListRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 	// Exames de uma coorte, anonimizados -> Bundle (para pesquisadores).
-	TransformCohortExams(ctx context.Context, in *TransformCohortExamsRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformCohortExams(ctx context.Context, in *TransformCohortExamsRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 	// Estatísticas cruas de uma coorte -> resposta com percentuais (AGGREGATED).
 	TransformCohortStatistics(ctx context.Context, in *TransformCohortStatisticsRequest, opts ...grpc.CallOption) (*CohortStatisticsResponse, error)
 	// Projetos de pesquisa -> Bundle de ResearchStudy.
-	TransformProjects(ctx context.Context, in *TransformProjectsRequest, opts ...grpc.CallOption) (*FhirResponse, error)
+	TransformProjects(ctx context.Context, in *TransformProjectsRequest, opts ...grpc.CallOption) (*structpb.Struct, error)
 }
 
 type dataTransformServiceClient struct {
@@ -61,9 +61,9 @@ func NewDataTransformServiceClient(cc grpc.ClientConnInterface) DataTransformSer
 	return &dataTransformServiceClient{cc}
 }
 
-func (c *dataTransformServiceClient) TransformPatient(ctx context.Context, in *TransformPatientRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformPatient(ctx context.Context, in *TransformPatientRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformPatient_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -71,9 +71,9 @@ func (c *dataTransformServiceClient) TransformPatient(ctx context.Context, in *T
 	return out, nil
 }
 
-func (c *dataTransformServiceClient) TransformClinicalSummary(ctx context.Context, in *TransformClinicalSummaryRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformClinicalSummary(ctx context.Context, in *TransformClinicalSummaryRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformClinicalSummary_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -81,9 +81,9 @@ func (c *dataTransformServiceClient) TransformClinicalSummary(ctx context.Contex
 	return out, nil
 }
 
-func (c *dataTransformServiceClient) TransformClinicalHistory(ctx context.Context, in *TransformClinicalHistoryRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformClinicalHistory(ctx context.Context, in *TransformClinicalHistoryRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformClinicalHistory_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -91,9 +91,9 @@ func (c *dataTransformServiceClient) TransformClinicalHistory(ctx context.Contex
 	return out, nil
 }
 
-func (c *dataTransformServiceClient) TransformPatientList(ctx context.Context, in *TransformPatientListRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformPatientList(ctx context.Context, in *TransformPatientListRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformPatientList_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -101,9 +101,9 @@ func (c *dataTransformServiceClient) TransformPatientList(ctx context.Context, i
 	return out, nil
 }
 
-func (c *dataTransformServiceClient) TransformCohortExams(ctx context.Context, in *TransformCohortExamsRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformCohortExams(ctx context.Context, in *TransformCohortExamsRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformCohortExams_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -121,9 +121,9 @@ func (c *dataTransformServiceClient) TransformCohortStatistics(ctx context.Conte
 	return out, nil
 }
 
-func (c *dataTransformServiceClient) TransformProjects(ctx context.Context, in *TransformProjectsRequest, opts ...grpc.CallOption) (*FhirResponse, error) {
+func (c *dataTransformServiceClient) TransformProjects(ctx context.Context, in *TransformProjectsRequest, opts ...grpc.CallOption) (*structpb.Struct, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FhirResponse)
+	out := new(structpb.Struct)
 	err := c.cc.Invoke(ctx, DataTransformService_TransformProjects_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -135,25 +135,24 @@ func (c *dataTransformServiceClient) TransformProjects(ctx context.Context, in *
 // All implementations must embed UnimplementedDataTransformServiceServer
 // for forward compatibility.
 //
-// DataTransformService é um transformador PURO (Modelo B, fiel à Figura 1): a API
-// Gateway busca os dados crus no patient-data-service e os envia aqui junto com o
-// nível de acesso. Este serviço aplica anonimização/pseudonimização/agregação e
-// converte para HL7/FHIR. Não acessa banco nem chama o patient-data.
+// DataTransformService recebe os dados crus + nível de acesso, aplica
+// anonimização/agregação e converte para HL7/FHIR. As respostas FHIR são objetos
+// JSON (google.protobuf.Struct): um recurso (ex.: Patient) ou um Bundle.
 type DataTransformServiceServer interface {
 	// Paciente único -> recurso FHIR Patient (com o nível aplicado).
-	TransformPatient(context.Context, *TransformPatientRequest) (*FhirResponse, error)
+	TransformPatient(context.Context, *TransformPatientRequest) (*structpb.Struct, error)
 	// Resumo clínico -> Bundle (Patient + Encounter + Condition + Observation + MedicationRequest).
-	TransformClinicalSummary(context.Context, *TransformClinicalSummaryRequest) (*FhirResponse, error)
+	TransformClinicalSummary(context.Context, *TransformClinicalSummaryRequest) (*structpb.Struct, error)
 	// Histórico clínico -> Bundle de eventos em ordem temporal.
-	TransformClinicalHistory(context.Context, *TransformClinicalHistoryRequest) (*FhirResponse, error)
+	TransformClinicalHistory(context.Context, *TransformClinicalHistoryRequest) (*structpb.Struct, error)
 	// Lista de pacientes (de um médico/estagiário) -> Bundle de Patient.
-	TransformPatientList(context.Context, *TransformPatientListRequest) (*FhirResponse, error)
+	TransformPatientList(context.Context, *TransformPatientListRequest) (*structpb.Struct, error)
 	// Exames de uma coorte, anonimizados -> Bundle (para pesquisadores).
-	TransformCohortExams(context.Context, *TransformCohortExamsRequest) (*FhirResponse, error)
+	TransformCohortExams(context.Context, *TransformCohortExamsRequest) (*structpb.Struct, error)
 	// Estatísticas cruas de uma coorte -> resposta com percentuais (AGGREGATED).
 	TransformCohortStatistics(context.Context, *TransformCohortStatisticsRequest) (*CohortStatisticsResponse, error)
 	// Projetos de pesquisa -> Bundle de ResearchStudy.
-	TransformProjects(context.Context, *TransformProjectsRequest) (*FhirResponse, error)
+	TransformProjects(context.Context, *TransformProjectsRequest) (*structpb.Struct, error)
 	mustEmbedUnimplementedDataTransformServiceServer()
 }
 
@@ -164,25 +163,25 @@ type DataTransformServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDataTransformServiceServer struct{}
 
-func (UnimplementedDataTransformServiceServer) TransformPatient(context.Context, *TransformPatientRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformPatient(context.Context, *TransformPatientRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformPatient not implemented")
 }
-func (UnimplementedDataTransformServiceServer) TransformClinicalSummary(context.Context, *TransformClinicalSummaryRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformClinicalSummary(context.Context, *TransformClinicalSummaryRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformClinicalSummary not implemented")
 }
-func (UnimplementedDataTransformServiceServer) TransformClinicalHistory(context.Context, *TransformClinicalHistoryRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformClinicalHistory(context.Context, *TransformClinicalHistoryRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformClinicalHistory not implemented")
 }
-func (UnimplementedDataTransformServiceServer) TransformPatientList(context.Context, *TransformPatientListRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformPatientList(context.Context, *TransformPatientListRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformPatientList not implemented")
 }
-func (UnimplementedDataTransformServiceServer) TransformCohortExams(context.Context, *TransformCohortExamsRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformCohortExams(context.Context, *TransformCohortExamsRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformCohortExams not implemented")
 }
 func (UnimplementedDataTransformServiceServer) TransformCohortStatistics(context.Context, *TransformCohortStatisticsRequest) (*CohortStatisticsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformCohortStatistics not implemented")
 }
-func (UnimplementedDataTransformServiceServer) TransformProjects(context.Context, *TransformProjectsRequest) (*FhirResponse, error) {
+func (UnimplementedDataTransformServiceServer) TransformProjects(context.Context, *TransformProjectsRequest) (*structpb.Struct, error) {
 	return nil, status.Error(codes.Unimplemented, "method TransformProjects not implemented")
 }
 func (UnimplementedDataTransformServiceServer) mustEmbedUnimplementedDataTransformServiceServer() {}

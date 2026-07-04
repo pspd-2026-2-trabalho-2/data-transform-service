@@ -3,28 +3,28 @@ syntax = "proto3";
 package datatransform.v1;
 
 import "patientdata/v1/patientdata.proto";
+import "google/protobuf/struct.proto";
 
 option go_package = "github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/datatransform/v1;datatransformv1";
 
-// DataTransformService é um transformador PURO (Modelo B, fiel à Figura 1): a API
-// Gateway busca os dados crus no patient-data-service e os envia aqui junto com o
-// nível de acesso. Este serviço aplica anonimização/pseudonimização/agregação e
-// converte para HL7/FHIR. Não acessa banco nem chama o patient-data.
+// DataTransformService recebe os dados crus + nível de acesso, aplica
+// anonimização/agregação e converte para HL7/FHIR. As respostas FHIR são objetos
+// JSON (google.protobuf.Struct): um recurso (ex.: Patient) ou um Bundle.
 service DataTransformService {
   // Paciente único -> recurso FHIR Patient (com o nível aplicado).
-  rpc TransformPatient(TransformPatientRequest) returns (FhirResponse);
+  rpc TransformPatient(TransformPatientRequest) returns (google.protobuf.Struct);
   // Resumo clínico -> Bundle (Patient + Encounter + Condition + Observation + MedicationRequest).
-  rpc TransformClinicalSummary(TransformClinicalSummaryRequest) returns (FhirResponse);
+  rpc TransformClinicalSummary(TransformClinicalSummaryRequest) returns (google.protobuf.Struct);
   // Histórico clínico -> Bundle de eventos em ordem temporal.
-  rpc TransformClinicalHistory(TransformClinicalHistoryRequest) returns (FhirResponse);
+  rpc TransformClinicalHistory(TransformClinicalHistoryRequest) returns (google.protobuf.Struct);
   // Lista de pacientes (de um médico/estagiário) -> Bundle de Patient.
-  rpc TransformPatientList(TransformPatientListRequest) returns (FhirResponse);
+  rpc TransformPatientList(TransformPatientListRequest) returns (google.protobuf.Struct);
   // Exames de uma coorte, anonimizados -> Bundle (para pesquisadores).
-  rpc TransformCohortExams(TransformCohortExamsRequest) returns (FhirResponse);
+  rpc TransformCohortExams(TransformCohortExamsRequest) returns (google.protobuf.Struct);
   // Estatísticas cruas de uma coorte -> resposta com percentuais (AGGREGATED).
   rpc TransformCohortStatistics(TransformCohortStatisticsRequest) returns (CohortStatisticsResponse);
   // Projetos de pesquisa -> Bundle de ResearchStudy.
-  rpc TransformProjects(TransformProjectsRequest) returns (FhirResponse);
+  rpc TransformProjects(TransformProjectsRequest) returns (google.protobuf.Struct);
 }
 
 // Nível de acesso determinado pelo Authorization Service (repassado pela Gateway).
@@ -34,11 +34,6 @@ enum AccessLevel {
   PARTIAL = 2;     // iniciais, sem CPF/CNS, ano de nascimento
   ANONYMIZED = 3;  // pseudônimo, sem identificadores diretos, faixa etária
   AGGREGATED = 4;  // apenas totais/percentuais
-}
-
-// Resposta genérica contendo um recurso ou Bundle FHIR serializado em JSON.
-message FhirResponse {
-  string fhir_json = 1;
 }
 
 message TransformPatientRequest {
@@ -96,4 +91,5 @@ message CohortStatisticsResponse {
   double mean_hba1c = 5;
   double median_hba1c = 6;
   repeated Percentage medication_frequency = 7;
+  repeated Percentage by_department = 8;
 }

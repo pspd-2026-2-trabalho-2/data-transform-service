@@ -37,6 +37,7 @@ type CohortStats struct {
 	MeanHbA1c           float64
 	MedianHbA1c         float64
 	MedicationFrequency []Percentage
+	ByDepartment        []Percentage
 }
 
 // PatientExams associa um paciente aos seus exames (entrada de TransformCohortExams).
@@ -45,14 +46,14 @@ type PatientExams struct {
 	Exams   []*pdpb.ClinicalEvent
 }
 
-// TransformPatient devolve um recurso FHIR Patient com o nível aplicado.
-func (s *Service) TransformPatient(patient *pdpb.Patient, level anonymize.Level) (string, error) {
+// Os métodos Transform* devolvem um recurso ou Bundle FHIR (structs do pacote fhir).
+
+func (s *Service) TransformPatient(patient *pdpb.Patient, level anonymize.Level) any {
 	s.metrics.RecordTransform("TransformPatient", level.String())
-	return fhir.ToJSON(patientResource(s.anon.Patient(toRaw(patient), level)))
+	return patientResource(s.anon.Patient(toRaw(patient), level))
 }
 
-// TransformClinicalSummary devolve um Bundle com o resumo clínico.
-func (s *Service) TransformClinicalSummary(sum *pdpb.ClinicalSummary, level anonymize.Level) (string, error) {
+func (s *Service) TransformClinicalSummary(sum *pdpb.ClinicalSummary, level anonymize.Level) any {
 	view := s.anon.Patient(toRaw(sum.GetPatient()), level)
 	resources := []any{patientResource(view)}
 	if sum.GetLastEncounter() != nil {
@@ -68,33 +69,30 @@ func (s *Service) TransformClinicalSummary(sum *pdpb.ClinicalSummary, level anon
 		resources = append(resources, medicationResource(view.ID, m))
 	}
 	s.metrics.RecordTransform("TransformClinicalSummary", level.String())
-	return fhir.ToJSON(fhir.NewBundle(resources...))
+	return fhir.NewBundle(resources...)
 }
 
-// TransformClinicalHistory devolve um Bundle com o histórico clínico temporal.
-func (s *Service) TransformClinicalHistory(patient *pdpb.Patient, events []*pdpb.ClinicalEvent, level anonymize.Level) (string, error) {
+func (s *Service) TransformClinicalHistory(patient *pdpb.Patient, events []*pdpb.ClinicalEvent, level anonymize.Level) any {
 	view := s.anon.Patient(toRaw(patient), level)
 	resources := []any{patientResource(view)}
 	for _, e := range events {
 		resources = append(resources, eventResource(view.ID, e))
 	}
 	s.metrics.RecordTransform("TransformClinicalHistory", level.String())
-	return fhir.ToJSON(fhir.NewBundle(resources...))
+	return fhir.NewBundle(resources...)
 }
 
-// TransformPatientList devolve um Bundle de Patient (lista de um médico/estagiário).
-func (s *Service) TransformPatientList(patients []*pdpb.Patient, level anonymize.Level) (string, error) {
+func (s *Service) TransformPatientList(patients []*pdpb.Patient, level anonymize.Level) any {
 	resources := make([]any, 0, len(patients))
 	for _, p := range patients {
 		resources = append(resources, patientResource(s.anon.Patient(toRaw(p), level)))
 	}
 	s.metrics.RecordTransform("TransformPatientList", level.String())
-	return fhir.ToJSON(fhir.NewBundle(resources...))
+	return fhir.NewBundle(resources...)
 }
 
-// TransformCohortExams devolve um Bundle com pacientes da coorte e seus exames,
-// tipicamente com nível ANONYMIZED (para pesquisadores).
-func (s *Service) TransformCohortExams(items []PatientExams, level anonymize.Level) (string, error) {
+// TransformCohortExams monta um Bundle com pacientes e exames, tipicamente ANONYMIZED.
+func (s *Service) TransformCohortExams(items []PatientExams, level anonymize.Level) any {
 	resources := make([]any, 0, len(items)*2)
 	for _, item := range items {
 		view := s.anon.Patient(toRaw(item.Patient), level)
@@ -104,17 +102,16 @@ func (s *Service) TransformCohortExams(items []PatientExams, level anonymize.Lev
 		}
 	}
 	s.metrics.RecordTransform("TransformCohortExams", level.String())
-	return fhir.ToJSON(fhir.NewBundle(resources...))
+	return fhir.NewBundle(resources...)
 }
 
-// TransformProjects devolve um Bundle de ResearchStudy.
-func (s *Service) TransformProjects(projects []*pdpb.Project) (string, error) {
+func (s *Service) TransformProjects(projects []*pdpb.Project) any {
 	resources := make([]any, 0, len(projects))
 	for _, p := range projects {
 		resources = append(resources, researchStudyResource(p))
 	}
 	s.metrics.RecordTransform("TransformProjects", "FULL")
-	return fhir.ToJSON(fhir.NewBundle(resources...))
+	return fhir.NewBundle(resources...)
 }
 
 // TransformCohortStatistics converte as contagens cruas em percentuais (AGGREGATED).
@@ -129,6 +126,7 @@ func (s *Service) TransformCohortStatistics(stats *pdpb.CohortStatistics) *Cohor
 		MeanHbA1c:           stats.GetMeanHba1C(),
 		MedianHbA1c:         stats.GetMedianHba1C(),
 		MedicationFrequency: toPercentages(stats.GetMedicationFrequency(), total),
+		ByDepartment:        toPercentages(stats.GetByDepartment(), total),
 	}
 }
 

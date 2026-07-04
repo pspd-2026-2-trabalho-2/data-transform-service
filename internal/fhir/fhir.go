@@ -2,7 +2,11 @@
 // Campos vazios usam omitempty, então dados removidos pela anonimização somem do JSON.
 package fhir
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"google.golang.org/protobuf/types/known/structpb"
+)
 
 type HumanName struct {
 	Text string `json:"text,omitempty"`
@@ -135,4 +139,17 @@ func ToJSON(v any) (string, error) {
 		return "", err
 	}
 	return string(b), nil
+}
+
+// ToStruct converte um recurso ou Bundle FHIR em google.protobuf.Struct (objeto JSON).
+func ToStruct(v any) (*structpb.Struct, error) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+	var m map[string]any
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return structpb.NewStruct(m)
 }

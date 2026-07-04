@@ -534,6 +534,7 @@ type CohortStatistics struct {
 	MeanHba1C           float64                `protobuf:"fixed64,5,opt,name=mean_hba1c,json=meanHba1c,proto3" json:"mean_hba1c,omitempty"`
 	MedianHba1C         float64                `protobuf:"fixed64,6,opt,name=median_hba1c,json=medianHba1c,proto3" json:"median_hba1c,omitempty"`
 	MedicationFrequency []*Count               `protobuf:"bytes,7,rep,name=medication_frequency,json=medicationFrequency,proto3" json:"medication_frequency,omitempty"`
+	ByDepartment        []*Count               `protobuf:"bytes,8,rep,name=by_department,json=byDepartment,proto3" json:"by_department,omitempty"`
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -617,6 +618,13 @@ func (x *CohortStatistics) GetMedicationFrequency() []*Count {
 	return nil
 }
 
+func (x *CohortStatistics) GetByDepartment() []*Count {
+	if x != nil {
+		return x.ByDepartment
+	}
+	return nil
+}
+
 var File_patientdata_v1_patientdata_proto protoreflect.FileDescriptor
 
 const file_patientdata_v1_patientdata_proto_rawDesc = "" +
@@ -677,7 +685,7 @@ const file_patientdata_v1_patientdata_proto_rawDesc = "" +
 	"\x12active_medications\x18\x05 \x03(\v2\x1d.patientdata.v1.ClinicalEventR\x11activeMedications\"/\n" +
 	"\x05Count\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05count\x18\x02 \x01(\x03R\x05count\"\xd3\x02\n" +
+	"\x05count\x18\x02 \x01(\x03R\x05count\"\x8f\x03\n" +
 	"\x10CohortStatistics\x12%\n" +
 	"\x0econdition_code\x18\x01 \x01(\tR\rconditionCode\x12%\n" +
 	"\x0etotal_patients\x18\x02 \x01(\x03R\rtotalPatients\x12,\n" +
@@ -687,7 +695,8 @@ const file_patientdata_v1_patientdata_proto_rawDesc = "" +
 	"\n" +
 	"mean_hba1c\x18\x05 \x01(\x01R\tmeanHba1c\x12!\n" +
 	"\fmedian_hba1c\x18\x06 \x01(\x01R\vmedianHba1c\x12H\n" +
-	"\x14medication_frequency\x18\a \x03(\v2\x15.patientdata.v1.CountR\x13medicationFrequencyB[ZYgithub.com/pspd-2026-2-trabalho-2/data-transform-service/gen/patientdata/v1;patientdatav1b\x06proto3"
+	"\x14medication_frequency\x18\a \x03(\v2\x15.patientdata.v1.CountR\x13medicationFrequency\x12:\n" +
+	"\rby_department\x18\b \x03(\v2\x15.patientdata.v1.CountR\fbyDepartmentB[ZYgithub.com/pspd-2026-2-trabalho-2/data-transform-service/gen/patientdata/v1;patientdatav1b\x06proto3"
 
 var (
 	file_patientdata_v1_patientdata_proto_rawDescOnce sync.Once
@@ -720,11 +729,12 @@ var file_patientdata_v1_patientdata_proto_depIdxs = []int32{
 	5, // 5: patientdata.v1.CohortStatistics.by_sex:type_name -> patientdata.v1.Count
 	5, // 6: patientdata.v1.CohortStatistics.by_age_range:type_name -> patientdata.v1.Count
 	5, // 7: patientdata.v1.CohortStatistics.medication_frequency:type_name -> patientdata.v1.Count
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	5, // 8: patientdata.v1.CohortStatistics.by_department:type_name -> patientdata.v1.Count
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_patientdata_v1_patientdata_proto_init() }

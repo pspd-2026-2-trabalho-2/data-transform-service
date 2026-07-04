@@ -70,4 +70,5 @@ message CohortStatistics {
   double mean_hba1c = 5;
   double median_hba1c = 6;
   repeated Count medication_frequency = 7;
+  repeated Count by_department = 8;
 }
