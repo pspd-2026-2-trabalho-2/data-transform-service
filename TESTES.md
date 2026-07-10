@@ -7,6 +7,10 @@ banco nem de outro serviço no ar.
 > No Postman (gRPC) os campos usam os **nomes do `.proto` (snake_case)**, ex.: `patient_id`,
 > `access_level`, `full_name`. A resposta FHIR é o próprio objeto (recurso ou Bundle), com os nomes
 > padrão FHIR (`resourceType`, `birthDate`, ...).
+>
+> Os **valores** de `event_type`, códigos e status seguem a convenção do banco real
+> (MAIÚSCULO/inglês): `CONDITION`/`OBSERVATION`/`MEDICATION`, `DIABETES`, `HBA1C`, `METFORMIN`,
+> `ENDOCRINOLOGY`, `APPROVED`, etc.
 
 ---
 
@@ -116,16 +120,16 @@ Esperado: Bundle com Patient + Encounter + 2 Condition + 2 Observation + 2 Medic
       "end_date": "2024-08-01", "encounter_type": "Retorno", "department": "Cardiologia"
     },
     "conditions": [
-      { "event_id": "EVC01", "patient_id": "P000001", "event_type": "Condition", "code": "Diabetes", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
-      { "event_id": "EVC14", "patient_id": "P000001", "event_type": "Condition", "code": "Hipertensao", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
+      { "event_id": "EVC01", "patient_id": "P000001", "event_type": "CONDITION", "code": "DIABETES", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
+      { "event_id": "EVC14", "patient_id": "P000001", "event_type": "CONDITION", "code": "HYPERTENSION", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
     ],
     "recent_observations": [
-      { "event_id": "EVO01", "patient_id": "P000001", "event_type": "Observation", "code": "HbA1c", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-      { "event_id": "EVO14", "patient_id": "P000001", "event_type": "Observation", "code": "Glicemia", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
+      { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
+      { "event_id": "EVO14", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "GLUCOSE", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
     ],
     "active_medications": [
-      { "event_id": "EVM01", "patient_id": "P000001", "event_type": "Medication", "code": "Metformina", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
-      { "event_id": "EVM15", "patient_id": "P000001", "event_type": "Medication", "code": "Losartana", "description": "Losartana 50 mg", "event_date": "2024-08-01", "value": 50, "unit": "mg" }
+      { "event_id": "EVM01", "patient_id": "P000001", "event_type": "MEDICATION", "code": "METFORMIN", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
+      { "event_id": "EVM15", "patient_id": "P000001", "event_type": "MEDICATION", "code": "LOSARTAN", "description": "Losartana 50 mg", "event_date": "2024-08-01", "value": 50, "unit": "mg" }
     ]
   },
   "access_level": "FULL"
@@ -142,10 +146,10 @@ Esperado: Bundle com Patient (id `hash484845`) + 4 eventos, todos referenciando 
     "cpf": "111.111.111-11", "cns": "700000000000001"
   },
   "events": [
-    { "event_id": "EVC01", "patient_id": "P000001", "event_type": "Condition", "code": "Diabetes", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
-    { "event_id": "EVO01", "patient_id": "P000001", "event_type": "Observation", "code": "HbA1c", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-    { "event_id": "EVM01", "patient_id": "P000001", "event_type": "Medication", "code": "Metformina", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
-    { "event_id": "EVC14", "patient_id": "P000001", "event_type": "Condition", "code": "Hipertensao", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
+    { "event_id": "EVC01", "patient_id": "P000001", "event_type": "CONDITION", "code": "DIABETES", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
+    { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
+    { "event_id": "EVM01", "patient_id": "P000001", "event_type": "MEDICATION", "code": "METFORMIN", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
+    { "event_id": "EVC14", "patient_id": "P000001", "event_type": "CONDITION", "code": "HYPERTENSION", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
   ],
   "access_level": "ANONYMIZED"
 }
@@ -171,14 +175,14 @@ Esperado: Bundle com 2 Patient pseudonimizados (ids distintos) + suas Observatio
     {
       "patient": { "patient_id": "P000001", "full_name": "João da Silva", "birth_date": "1970-05-10", "gender": "male", "city": "Brasilia", "state": "DF", "cpf": "111.111.111-11", "cns": "700000000000001" },
       "exams": [
-        { "event_id": "EVO01", "patient_id": "P000001", "event_type": "Observation", "code": "HbA1c", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-        { "event_id": "EVO14", "patient_id": "P000001", "event_type": "Observation", "code": "Glicemia", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
+        { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
+        { "event_id": "EVO14", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "GLUCOSE", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
       ]
     },
     {
       "patient": { "patient_id": "P000002", "full_name": "Maria Souza", "birth_date": "1985-03-22", "gender": "female", "city": "Goiania", "state": "GO", "cpf": "222.222.222-22", "cns": "700000000000002" },
       "exams": [
-        { "event_id": "EVO02", "patient_id": "P000002", "event_type": "Observation", "code": "HbA1c", "description": "Hemoglobina glicada", "event_date": "2024-03-05", "value": 7.2, "unit": "%" }
+        { "event_id": "EVO02", "patient_id": "P000002", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-03-05", "value": 7.2, "unit": "%" }
       ]
     }
   ],
@@ -187,19 +191,19 @@ Esperado: Bundle com 2 Patient pseudonimizados (ids distintos) + suas Observatio
 ```
 
 ### CT-08 — TransformCohortStatistics (percentuais)
-Esperado: sexo F 53.85% / M 46.15%; faixas 23.08/46.15/30.77%; medicamentos Metformina 76.92%,
-Insulina 30.77%, Losartana 15.38%; departamentos Endocrinologia 100%, Cardiologia 15.38%.
+Esperado: sexo F 53.85% / M 46.15%; faixas 23.08/46.15/30.77%; medicamentos METFORMIN 76.92%,
+INSULIN 30.77%, LOSARTAN 15.38%; departamentos ENDOCRINOLOGY 100%, CARDIOLOGY 15.38%.
 ```json
 {
   "stats": {
-    "condition_code": "Diabetes",
+    "condition_code": "DIABETES",
     "total_patients": 13,
     "by_sex": [ { "key": "female", "count": 7 }, { "key": "male", "count": 6 } ],
     "by_age_range": [ { "key": "18-39", "count": 3 }, { "key": "40-59", "count": 6 }, { "key": "60+", "count": 4 } ],
     "mean_hba1c": 7.76,
     "median_hba1c": 7.6,
-    "medication_frequency": [ { "key": "Metformina", "count": 10 }, { "key": "Insulina", "count": 4 }, { "key": "Losartana", "count": 2 } ],
-    "by_department": [ { "key": "Endocrinologia", "count": 13 }, { "key": "Cardiologia", "count": 2 } ]
+    "medication_frequency": [ { "key": "METFORMIN", "count": 10 }, { "key": "INSULIN", "count": 4 }, { "key": "LOSARTAN", "count": 2 } ],
+    "by_department": [ { "key": "ENDOCRINOLOGY", "count": 13 }, { "key": "CARDIOLOGY", "count": 2 } ]
   }
 }
 ```
@@ -209,8 +213,8 @@ Esperado: Bundle com 2 ResearchStudy: PRJ01 `active`, PRJ02 `completed`.
 ```json
 {
   "projects": [
-    { "project_id": "PRJ01", "title": "Coorte Diabetes Tipo 2", "researcher_username": "pesq.lima", "condition_code": "Diabetes", "status": "Aprovado", "valid_until": "2027-12-31" },
-    { "project_id": "PRJ02", "title": "Coorte Hipertensão Resistente", "researcher_username": "pesq.lima", "condition_code": "Hipertensao", "status": "Expirado", "valid_until": "2024-01-01" }
+    { "project_id": "PRJ01", "title": "Coorte Diabetes Tipo 2", "researcher_username": "pesq.lima", "condition_code": "DIABETES", "status": "APPROVED", "valid_until": "2027-12-31" },
+    { "project_id": "PRJ02", "title": "Coorte Hipertensão Resistente", "researcher_username": "pesq.lima", "condition_code": "HYPERTENSION", "status": "EXPIRED", "valid_until": "2024-01-01" }
   ]
 }
 ```

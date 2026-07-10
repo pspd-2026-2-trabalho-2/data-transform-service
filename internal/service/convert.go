@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strings"
+
 	pdpb "github.com/pspd-2026-2-trabalho-2/data-transform-service/gen/patientdata/v1"
 	"github.com/pspd-2026-2-trabalho-2/data-transform-service/internal/anonymize"
 	"github.com/pspd-2026-2-trabalho-2/data-transform-service/internal/fhir"
@@ -110,13 +112,14 @@ func medicationResource(subjectID string, e *pdpb.ClinicalEvent) fhir.Medication
 }
 
 // eventResource despacha um evento clínico para o recurso FHIR correspondente.
+// Comparação case-insensitive (o banco usa MAIÚSCULO: OBSERVATION/MEDICATION/CONDITION).
 func eventResource(subjectID string, e *pdpb.ClinicalEvent) any {
-	switch e.GetEventType() {
-	case "Observation":
+	switch strings.ToUpper(e.GetEventType()) {
+	case "OBSERVATION":
 		return observationResource(subjectID, e)
-	case "Medication":
+	case "MEDICATION":
 		return medicationResource(subjectID, e)
-	default: // Condition
+	default: // CONDITION
 		return conditionResource(subjectID, e)
 	}
 }
@@ -130,14 +133,20 @@ func researchStudyResource(p *pdpb.Project) fhir.ResearchStudy {
 	}
 }
 
+// studyStatus mapeia o status do projeto (banco: APPROVED/PENDING/EXPIRED/REJECTED/
+// SUSPENDED) para um status válido de ResearchStudy do FHIR R4.
 func studyStatus(s string) string {
-	switch s {
-	case "Aprovado":
+	switch strings.ToUpper(s) {
+	case "APPROVED", "APROVADO":
 		return "active"
-	case "Expirado":
+	case "EXPIRED", "EXPIRADO":
 		return "completed"
-	case "Suspenso":
-		return "suspended"
+	case "SUSPENDED", "SUSPENSO":
+		return "temporarily-closed-to-accrual"
+	case "REJECTED":
+		return "withdrawn"
+	case "PENDING":
+		return "in-progress"
 	default:
 		return "active"
 	}
