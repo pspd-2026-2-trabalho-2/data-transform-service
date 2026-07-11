@@ -8,9 +8,11 @@ banco nem de outro serviço no ar.
 > `access_level`, `full_name`. A resposta FHIR é o próprio objeto (recurso ou Bundle), com os nomes
 > padrão FHIR (`resourceType`, `birthDate`, ...).
 >
-> Os **valores** de `event_type`, códigos e status seguem a convenção do banco real
-> (MAIÚSCULO/inglês): `CONDITION`/`OBSERVATION`/`MEDICATION`, `DIABETES`, `HBA1C`, `METFORMIN`,
-> `ENDOCRINOLOGY`, `APPROVED`, etc.
+> Os exemplos usam um **paciente real do banco do professor** — **Ana Almeida** (`P030000001`), com
+> seus **eventos clínicos reais** (Insuficiência Cardíaca, IMC, Sinvastatina) — e a **coorte real de
+> Diabetes** (30.110 pacientes). Os **valores** de `event_type`, códigos e status seguem a convenção
+> do banco real (MAIÚSCULO/inglês): `CONDITION`/`OBSERVATION`/`MEDICATION`, `HEART_FAILURE`, `BMI`,
+> `SIMVASTATIN`, `PEDIATRICS`, `APPROVED`, etc.
 
 ---
 
@@ -49,87 +51,87 @@ go test ./...   # regras de anonimização + conversão FHIR (sem rede)
 
 ## 5. Casos de teste
 
-O destaque (CT-01 a CT-03) é ver o **mesmo paciente encolher** conforme o nível cai.
+O destaque (CT-01 a CT-03) é ver o **mesmo paciente real encolher** conforme o nível cai.
 
 ### CT-01 — TransformPatient (FULL)
 Esperado: Patient com nome completo, CPF/CNS, data exata, cidade/estado.
 ```json
 {
   "patient": {
-    "patient_id": "P000001",
-    "full_name": "João da Silva",
-    "birth_date": "1970-05-10",
-    "gender": "male",
-    "city": "Brasilia",
-    "state": "DF",
-    "cpf": "111.111.111-11",
-    "cns": "700000000000001"
+    "patient_id": "P030000001",
+    "full_name": "Ana Almeida",
+    "birth_date": "2009-03-12",
+    "gender": "female",
+    "city": "Formosa",
+    "state": "GO",
+    "cpf": "03000000001",
+    "cns": "898030000000001"
   },
   "access_level": "FULL"
 }
 ```
 
 ### CT-02 — TransformPatient (PARTIAL)
-Esperado: nome `J.S.`, `birthDate: "1970"`, **sem** CPF/CNS; mantém cidade/estado.
+Esperado: nome `A.A.`, `birthDate: "2009"`, **sem** CPF/CNS; mantém cidade/estado (Formosa/GO).
 ```json
 {
   "patient": {
-    "patient_id": "P000001",
-    "full_name": "João da Silva",
-    "birth_date": "1970-05-10",
-    "gender": "male",
-    "city": "Brasilia",
-    "state": "DF",
-    "cpf": "111.111.111-11",
-    "cns": "700000000000001"
+    "patient_id": "P030000001",
+    "full_name": "Ana Almeida",
+    "birth_date": "2009-03-12",
+    "gender": "female",
+    "city": "Formosa",
+    "state": "GO",
+    "cpf": "03000000001",
+    "cns": "898030000000001"
   },
   "access_level": "PARTIAL"
 }
 ```
 
 ### CT-03 — TransformPatient (ANONYMIZED)
-Esperado: `id: "hash484845"`, **sem** nome/CPF/cidade/data; faixa etária `40-59`; só o estado.
+Esperado: `id: "hash8778a4"` (pseudônimo; o valor exato depende do `PSEUDONYM_SALT`), **sem**
+nome/CPF/CNS/cidade/data; faixa etária `0-17`; só o estado (GO).
 ```json
 {
   "patient": {
-    "patient_id": "P000001",
-    "full_name": "João da Silva",
-    "birth_date": "1970-05-10",
-    "gender": "male",
-    "city": "Brasilia",
-    "state": "DF",
-    "cpf": "111.111.111-11",
-    "cns": "700000000000001"
+    "patient_id": "P030000001",
+    "full_name": "Ana Almeida",
+    "birth_date": "2009-03-12",
+    "gender": "female",
+    "city": "Formosa",
+    "state": "GO",
+    "cpf": "03000000001",
+    "cns": "898030000000001"
   },
   "access_level": "ANONYMIZED"
 }
 ```
 
 ### CT-04 — TransformClinicalSummary (FULL → Bundle)
-Esperado: Bundle com Patient + Encounter + 2 Condition + 2 Observation + 2 MedicationRequest.
+Esperado: Bundle com Patient + Encounter + 1 Condition + 1 Observation + 1 MedicationRequest.
+Dados **reais** da Ana (`GetClinicalSummary`): Insuficiência Cardíaca, IMC 26,9 e Sinvastatina, num
+atendimento de internação (PEDIATRICS).
 ```json
 {
   "summary": {
     "patient": {
-      "patient_id": "P000001", "full_name": "João da Silva", "birth_date": "1970-05-10",
-      "gender": "male", "city": "Brasilia", "state": "DF",
-      "cpf": "111.111.111-11", "cns": "700000000000001"
+      "patient_id": "P030000001", "full_name": "Ana Almeida", "birth_date": "2009-03-12",
+      "gender": "female", "city": "Formosa", "state": "GO",
+      "cpf": "03000000001", "cns": "898030000000001"
     },
     "last_encounter": {
-      "encounter_id": "ENC16", "patient_id": "P000001", "start_date": "2024-08-01",
-      "end_date": "2024-08-01", "encounter_type": "Retorno", "department": "Cardiologia"
+      "encounter_id": "E03000000001", "patient_id": "P030000001", "start_date": "2024-08-05",
+      "end_date": "2024-08-05", "encounter_type": "INPATIENT", "department": "PEDIATRICS"
     },
     "conditions": [
-      { "event_id": "EVC01", "patient_id": "P000001", "event_type": "CONDITION", "code": "DIABETES", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
-      { "event_id": "EVC14", "patient_id": "P000001", "event_type": "CONDITION", "code": "HYPERTENSION", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
+      { "event_id": "CE030000000001", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "CONDITION", "code": "HEART_FAILURE", "description": "Insuficiência Cardíaca", "event_date": "2024-08-05" }
     ],
     "recent_observations": [
-      { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-      { "event_id": "EVO14", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "GLUCOSE", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
+      { "event_id": "CE030000000002", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "OBSERVATION", "code": "BMI", "description": "Índice de Massa Corporal", "event_date": "2024-08-05", "value": 26.9, "unit": "kg/m²" }
     ],
     "active_medications": [
-      { "event_id": "EVM01", "patient_id": "P000001", "event_type": "MEDICATION", "code": "METFORMIN", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
-      { "event_id": "EVM15", "patient_id": "P000001", "event_type": "MEDICATION", "code": "LOSARTAN", "description": "Losartana 50 mg", "event_date": "2024-08-01", "value": 50, "unit": "mg" }
+      { "event_id": "CE030000000003", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "MEDICATION", "code": "SIMVASTATIN", "description": "Sinvastatina", "event_date": "2024-08-05", "value": 20, "unit": "mg" }
     ]
   },
   "access_level": "FULL"
@@ -137,31 +139,32 @@ Esperado: Bundle com Patient + Encounter + 2 Condition + 2 Observation + 2 Medic
 ```
 
 ### CT-05 — TransformClinicalHistory (ANONYMIZED → Bundle)
-Esperado: Bundle com Patient (id `hash484845`) + 4 eventos, todos referenciando `Patient/hash484845`.
+Esperado: Bundle com Patient (id `hash8778a4`) + 3 eventos reais, todos referenciando
+`Patient/hash8778a4`.
 ```json
 {
   "patient": {
-    "patient_id": "P000001", "full_name": "João da Silva", "birth_date": "1970-05-10",
-    "gender": "male", "city": "Brasilia", "state": "DF",
-    "cpf": "111.111.111-11", "cns": "700000000000001"
+    "patient_id": "P030000001", "full_name": "Ana Almeida", "birth_date": "2009-03-12",
+    "gender": "female", "city": "Formosa", "state": "GO",
+    "cpf": "03000000001", "cns": "898030000000001"
   },
   "events": [
-    { "event_id": "EVC01", "patient_id": "P000001", "event_type": "CONDITION", "code": "DIABETES", "description": "Diabetes Mellitus Tipo 2", "event_date": "2024-02-10" },
-    { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-    { "event_id": "EVM01", "patient_id": "P000001", "event_type": "MEDICATION", "code": "METFORMIN", "description": "Metformina 850 mg", "event_date": "2024-02-10", "value": 850, "unit": "mg" },
-    { "event_id": "EVC14", "patient_id": "P000001", "event_type": "CONDITION", "code": "HYPERTENSION", "description": "Hipertensão Arterial", "event_date": "2024-08-01" }
+    { "event_id": "CE030000000001", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "CONDITION", "code": "HEART_FAILURE", "description": "Insuficiência Cardíaca", "event_date": "2024-08-05" },
+    { "event_id": "CE030000000002", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "OBSERVATION", "code": "BMI", "description": "Índice de Massa Corporal", "event_date": "2024-08-05", "value": 26.9, "unit": "kg/m²" },
+    { "event_id": "CE030000000003", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "MEDICATION", "code": "SIMVASTATIN", "description": "Sinvastatina", "event_date": "2024-08-05", "value": 20, "unit": "mg" }
   ],
   "access_level": "ANONYMIZED"
 }
 ```
 
 ### CT-06 — TransformPatientList (PARTIAL → Bundle)
-Esperado: Bundle com 2 Patient; nomes `J.S.` e `M.S.`, sem CPF/CNS.
+Esperado: Bundle com 2 Patient; nomes em iniciais (`A.A.` e `M.S.`), sem CPF/CNS.
+> O segundo paciente é **ilustrativo** (para mostrar a lista com mais de um).
 ```json
 {
   "patients": [
-    { "patient_id": "P000001", "full_name": "João da Silva", "birth_date": "1970-05-10", "gender": "male", "city": "Brasilia", "state": "DF", "cpf": "111.111.111-11", "cns": "700000000000001" },
-    { "patient_id": "P000002", "full_name": "Maria Souza", "birth_date": "1985-03-22", "gender": "female", "city": "Goiania", "state": "GO", "cpf": "222.222.222-22", "cns": "700000000000002" }
+    { "patient_id": "P030000001", "full_name": "Ana Almeida", "birth_date": "2009-03-12", "gender": "female", "city": "Formosa", "state": "GO", "cpf": "03000000001", "cns": "898030000000001" },
+    { "patient_id": "PEX000002", "full_name": "Maria Souza", "birth_date": "1985-03-22", "gender": "female", "city": "Goiania", "state": "GO", "cpf": "222.222.222-22", "cns": "700000000000002" }
   ],
   "access_level": "PARTIAL"
 }
@@ -169,20 +172,20 @@ Esperado: Bundle com 2 Patient; nomes `J.S.` e `M.S.`, sem CPF/CNS.
 
 ### CT-07 — TransformCohortExams (ANONYMIZED → Bundle)
 Esperado: Bundle com 2 Patient pseudonimizados (ids distintos) + suas Observations; nenhum nome/CPF.
+> Exame da Ana é real (IMC); o segundo paciente é **ilustrativo**.
 ```json
 {
   "patients": [
     {
-      "patient": { "patient_id": "P000001", "full_name": "João da Silva", "birth_date": "1970-05-10", "gender": "male", "city": "Brasilia", "state": "DF", "cpf": "111.111.111-11", "cns": "700000000000001" },
+      "patient": { "patient_id": "P030000001", "full_name": "Ana Almeida", "birth_date": "2009-03-12", "gender": "female", "city": "Formosa", "state": "GO", "cpf": "03000000001", "cns": "898030000000001" },
       "exams": [
-        { "event_id": "EVO01", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-02-10", "value": 8.1, "unit": "%" },
-        { "event_id": "EVO14", "patient_id": "P000001", "event_type": "OBSERVATION", "code": "GLUCOSE", "description": "Glicemia de jejum", "event_date": "2024-02-10", "value": 182, "unit": "mg/dL" }
+        { "event_id": "CE030000000002", "patient_id": "P030000001", "encounter_id": "E03000000001", "event_type": "OBSERVATION", "code": "BMI", "description": "Índice de Massa Corporal", "event_date": "2024-08-05", "value": 26.9, "unit": "kg/m²" }
       ]
     },
     {
-      "patient": { "patient_id": "P000002", "full_name": "Maria Souza", "birth_date": "1985-03-22", "gender": "female", "city": "Goiania", "state": "GO", "cpf": "222.222.222-22", "cns": "700000000000002" },
+      "patient": { "patient_id": "PEX000002", "full_name": "Maria Souza", "birth_date": "1985-03-22", "gender": "female", "city": "Goiania", "state": "GO", "cpf": "222.222.222-22", "cns": "700000000000002" },
       "exams": [
-        { "event_id": "EVO02", "patient_id": "P000002", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2024-03-05", "value": 7.2, "unit": "%" }
+        { "event_id": "EVO0300003", "patient_id": "PEX000002", "event_type": "OBSERVATION", "code": "HBA1C", "description": "Hemoglobina glicada", "event_date": "2025-03-05", "value": 7.2, "unit": "%" }
       ]
     }
   ],
@@ -190,31 +193,35 @@ Esperado: Bundle com 2 Patient pseudonimizados (ids distintos) + suas Observatio
 }
 ```
 
-### CT-08 — TransformCohortStatistics (percentuais)
-Esperado: sexo F 53.85% / M 46.15%; faixas 23.08/46.15/30.77%; medicamentos METFORMIN 76.92%,
-INSULIN 30.77%, LOSARTAN 15.38%; departamentos ENDOCRINOLOGY 100%, CARDIOLOGY 15.38%.
+### CT-08 — TransformCohortStatistics (percentuais — coorte real)
+Entrada: as contagens reais da coorte de Diabetes (`GetCohortStatistics` do patient-data).
+Esperado (percentuais sobre 30.110): sexo F **49,9%** / M **50,1%**; faixas 0-17 **15,3%**, 18-39
+**27,0%**, 40-59 **24,5%**, 60+ **33,2%**; medicamentos ~**37%** cada; departamentos ~**16–17%**
+cada; HbA1c média **8,50** / mediana **8,5** (repassadas).
 ```json
 {
   "stats": {
     "condition_code": "DIABETES",
-    "total_patients": 13,
-    "by_sex": [ { "key": "female", "count": 7 }, { "key": "male", "count": 6 } ],
-    "by_age_range": [ { "key": "18-39", "count": 3 }, { "key": "40-59", "count": 6 }, { "key": "60+", "count": 4 } ],
-    "mean_hba1c": 7.76,
-    "median_hba1c": 7.6,
-    "medication_frequency": [ { "key": "METFORMIN", "count": 10 }, { "key": "INSULIN", "count": 4 }, { "key": "LOSARTAN", "count": 2 } ],
-    "by_department": [ { "key": "ENDOCRINOLOGY", "count": 13 }, { "key": "CARDIOLOGY", "count": 2 } ]
+    "total_patients": 30110,
+    "by_sex": [ { "key": "female", "count": 15022 }, { "key": "male", "count": 15088 } ],
+    "by_age_range": [ { "key": "0-17", "count": 4613 }, { "key": "18-39", "count": 8145 }, { "key": "40-59", "count": 7362 }, { "key": "60+", "count": 9990 } ],
+    "mean_hba1c": 8.495,
+    "median_hba1c": 8.5,
+    "medication_frequency": [ { "key": "LOSARTAN", "count": 11362 }, { "key": "ENALAPRIL", "count": 11354 }, { "key": "SIMVASTATIN", "count": 11206 }, { "key": "METFORMIN", "count": 11139 }, { "key": "INSULIN", "count": 11084 } ],
+    "by_department": [ { "key": "PEDIATRICS", "count": 5107 }, { "key": "NEPHROLOGY", "count": 5078 }, { "key": "INTERNAL_MEDICINE", "count": 5069 }, { "key": "INFECTIOUS_DISEASES", "count": 5043 }, { "key": "ICU", "count": 5021 }, { "key": "SURGERY", "count": 5019 }, { "key": "CARDIOLOGY", "count": 5015 }, { "key": "EMERGENCY", "count": 4964 }, { "key": "ORTHOPEDICS", "count": 4964 }, { "key": "ENDOCRINOLOGY", "count": 4956 }, { "key": "ONCOLOGY", "count": 4954 }, { "key": "TELEMEDICINE", "count": 4918 }, { "key": "PULMONOLOGY", "count": 4900 }, { "key": "GERIATRICS", "count": 4876 } ]
   }
 }
 ```
 
-### CT-09 — TransformProjects (ResearchStudy)
-Esperado: Bundle com 2 ResearchStudy: PRJ01 `active`, PRJ02 `completed`.
+### CT-09 — TransformProjects (ResearchStudy — projetos reais)
+Esperado: Bundle com 3 ResearchStudy: PRJ01_G03 `active` (APPROVED), PRJ04_G03 `in-progress`
+(PENDING) e PRJ05_G03 `completed` (EXPIRED). *(Os `title` são rótulos ilustrativos.)*
 ```json
 {
   "projects": [
-    { "project_id": "PRJ01", "title": "Coorte Diabetes Tipo 2", "researcher_username": "pesq.lima", "condition_code": "DIABETES", "status": "APPROVED", "valid_until": "2027-12-31" },
-    { "project_id": "PRJ02", "title": "Coorte Hipertensão Resistente", "researcher_username": "pesq.lima", "condition_code": "HYPERTENSION", "status": "EXPIRED", "valid_until": "2024-01-01" }
+    { "project_id": "PRJ01_G03", "title": "Coorte de Diabetes", "researcher_username": "pes.mendes", "condition_code": "DIABETES", "status": "APPROVED", "valid_until": "2027-12-31" },
+    { "project_id": "PRJ04_G03", "title": "Coorte de Doença Renal Crônica", "researcher_username": "pes.mendes", "condition_code": "CKD", "status": "PENDING", "valid_until": "2027-06-30" },
+    { "project_id": "PRJ05_G03", "title": "Coorte de Insuficiência Cardíaca", "researcher_username": "pes.araujo", "condition_code": "HEART_FAILURE", "status": "EXPIRED", "valid_until": "2024-01-01" }
   ]
 }
 ```
@@ -234,5 +241,6 @@ Pare o serviço com `Ctrl+C` (ou `docker compose down`).
 | Sintoma | Solução |
 |---|---|
 | `INVALID_ARGUMENT` (ex.: `patient é obrigatório`) | campo vazio; use os nomes **snake_case** (`patient`, `access_level`, `patient_id`) e preencha os valores |
+| o `id` no ANONYMIZED não é `hash8778a4` | o pseudônimo depende do `PSEUDONYM_SALT`; com outro salt o hash muda (é normal) |
 | Postman não conecta | serviço fora do ar ou porta errada (gRPC é 50053); TLS desligado |
 | métodos não aparecem no Postman | a reflection precisa do serviço no ar; recarregue após conectar, ou importe o `.proto` |

@@ -22,7 +22,7 @@ API Gateway ──────────┤
 | Campo | FULL | PARTIAL | ANONYMIZED |
 |---|---|---|---|
 | id | real | real | pseudônimo `hash…` (SHA-256 com salt) |
-| nome | completo | iniciais (`J.S.`) | removido |
+| nome | completo | iniciais (`A.A.`) | removido |
 | CPF / CNS | incluídos | removidos | removidos |
 | nascimento | data exata | só o ano | removida (vira faixa etária) |
 | sexo | sim | sim | sim |
